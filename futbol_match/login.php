@@ -4,22 +4,20 @@ include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $nombre = $_POST['nombre'];
-    $password = hash('sha256', $_POST['password']);
+    $password = $_POST['password'];
 
-    $stmt = $conn->prepare("SELECT * FROM equipos WHERE nombre = ? AND password = ?");
-    $stmt->bind_param("ss", $nombre, $password);
-    $stmt->execute();
-    $result = $stmt->get_result();
+    // Preparar la consulta con PDO
+    $stmt = $conn->prepare("SELECT * FROM equipos WHERE nombre = ?");
+    $stmt->execute([$nombre]);
+    $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-        $_SESSION['equipo'] = $row['nombre'];    // Guarda el nombre
-        $_SESSION['equipo_id'] = $row['id'];     // Guarda el ID (importante para invitaciones)
+    if ($row && password_verify($password, $row['password'])) {
+        $_SESSION['equipo'] = $row['nombre'];
+        $_SESSION['equipo_id'] = $row['id'];
         header("Location: buscar.html");
         exit();
     } else {
         echo "<p style='color:red;'>Nombre o contraseña incorrectos.</p>";
     }
-    $stmt->close();
 }
 ?>
