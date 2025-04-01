@@ -1,6 +1,6 @@
 <?php
 $serverName = "1496018.database.windows.net";
-$database = "1496018_BD";
+$database = "1496018";
 $username = "andresubillus";
 $password = "123456@a"; // Recuerda no compartir contraseñas en código real
 

@@ -24,6 +24,7 @@ INSERT INTO equipos (nombre, password, edad_min, edad_max, victorias, derrotas, 
 ('Team 3', '1234', 17, 25, 1, 2, 'Los Olivos', '17-25', '7 jugadores'),
 ('Team 4', '1234', 17, 20, 0, 2, 'Los Olivos', '17-20', '7 jugadores');
 
+
 -- Tabla invitaciones
 CREATE TABLE invitaciones (
   id INT(11) NOT NULL AUTO_INCREMENT,
