@@ -1,0 +1,189 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #7b68f5;
+    color: rgb(0, 0, 0);
+    text-align: center;
+}
+
+/* Encabezado fijo */
+header {
+    background: #46ffc8;
+    color: white;
+    padding: 1rem;
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    margin: 0 15px;
+    font-weight: bold;
+}
+
+nav .btn {
+    background: white;
+    color: #ff4655;
+    padding: 8px 15px;
+    border-radius: 5px;
+    font-weight: bold;
+}
+
+/* Hero */
+.hero {
+    margin-top: 80px;
+    padding: 100px 20px;
+    background: url('../futbol_match/Pixel-Cup-Soccer---Ultimate-Edition_02.gif') no-repeat center center/cover;
+}
+.hero h1 {
+    font-size: 2.5rem;
+}
+
+.btn-main {
+    background: #ff4655;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-size: 1.2rem;
+    border-radius: 5px;
+}
+
+/* Ranking */
+.ranking, .proximos-partidos {
+    padding: 50px 20px;
+}
+
+.ranking table {
+    margin: 0 auto;
+    border-collapse: collapse;
+    width: 60%;
+}
+
+.ranking th, .ranking td {
+    border: 1px solid white;
+    padding: 10px;
+}
+
+/* Footer */
+footer {
+    background: #111;
+    padding: 20px;
+}
+
+#noticias h2 {
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+#noticias img:hover {
+    transform: scale(1.05);
+    transition: 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+.slider-container {
+    width: 100%;
+    max-width: 500px; /* ajusta según diseño */
+    height: 300px;
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+    
+    background-image: url('../futbol_match/aidan-yelamos-berbel-footballnight.gif');
+    background-size: cover; /* ajusta al tamaño del div */
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+}
+
+
+.slider-track {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.5s ease;
+}
+
+
+.slider-track a {
+    flex: 0 0 100%;
+    height: 100%;
+}
+
+.slider-track img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center center;
+    display: block;
+    margin: 0 auto;
+    border-radius: 10px;
+    background-color: transparent;
+}
+.info-futbolmatch {
+    padding: 60px 30px;
+    background: #1d3557;
+    color: #f1f1f1;
+    text-align: center;
+    border-top: 5px solid #ff4655;
+    border-bottom: 5px solid #ff4655;
+}
+
+.info-futbolmatch h2 {
+    font-size: 2.5rem;
+    margin-bottom: 20px;
+    color: #ffce00;
+    text-shadow: 2px 2px 0 #000;
+}
+
+.info-futbolmatch .intro {
+    font-size: 1.1rem;
+    margin-bottom: 40px;
+    max-width: 800px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.info-boxes {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.info-box {
+    background: #264653;
+    padding: 20px;
+    border-radius: 10px;
+    width: 280px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
+}
+
+.info-box:hover {
+    transform: scale(1.05);
+    background: #2a9d8f;
+}
+
+.info-box h3 {
+    color: #ffce00;
+    margin-bottom: 10px;
+}
+
+.info-box p {
+    font-size: 0.95rem;
+    color: #f8f8f8;
+}
+.info-boxes a {
+    text-decoration: none;
+    color: inherit;
+}

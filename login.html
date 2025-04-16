@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Login - Futbol Match</title>
+  <style>
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        background: url('../futbol_match/3qeP.gif') no-repeat center center fixed;
+        background-size: cover;
+        font-family: Arial, sans-serif;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .login-container {
+        background-color: rgba(255, 255, 255, 0.9); /* fondo blanco semitransparente */
+        padding: 40px;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.4);
+        max-width: 400px;
+        width: 100%;
+        text-align: center;
+    }
+
+    h2 {
+        margin-bottom: 25px;
+        color: #1d3557;
+    }
+
+    label {
+        display: block;
+        text-align: left;
+        margin-bottom: 5px;
+        font-weight: bold;
+        color: #333;
+    }
+
+    input {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        box-sizing: border-box;
+    }
+
+    .btn {
+        background-color: #1d3557;
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        width: 100%;
+        cursor: pointer;
+        font-size: 16px;
+        transition: background-color 0.3s ease;
+    }
+
+    .btn:hover {
+        background-color: #457b9d;
+    }
+
+    .register {
+        margin-top: 15px;
+        display: inline-block;
+        color: #1d3557;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+    .register:hover {
+        text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <h2>Inicia sesión en tu cuenta</h2>
+    <form action="login.php" method="post">
+      <label for="nombre">Nombre de Equipo</label>
+      <input type="text" id="nombre" name="nombre" required>
+
+      <label for="password">Contraseña</label>
+      <input type="password" id="password" name="password" required>
+
+      <button type="submit" class="btn">Iniciar Sesión</button>
+    </form>
+
+    <a href="registro.php" class="register">¿Aún no tienes cuenta? Regístrate</a>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Buscar Equipos</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background: #e47d7d; }
+        .hero2 {
+        margin-top: 1%;
+        padding: 150px 20px;
+        background: url('../futbol_match/aidan-yelamos-berbel-footballnight.gif') no-repeat center center/cover;
+        text-align: center;
+}
+        h1 { text-align: center;
+        color: #000000; }
+        h4 { text-align: center;
+            color: #000000; }
+
+        input, button { margin: 5px; padding: 8px; }
+        .equipo { margin: 10px 0; cursor: pointer; color: blue; text-decoration: underline; }
+        #modal, #modalNotif {
+            display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            background: white; padding: 20px; border: 1px solid #ccc; border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5); z-index: 1000; max-width: 400px;
+        }
+        #overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); z-index: 999;
+        }
+        button { cursor: pointer; 
+            background-color: #1d3557;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 5px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+.botonera {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 40px; /* 👈 Puedes ajustar este valor */
+    margin-bottom: 20px;
+}
+
+#mensajes {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.chat-burbuja {
+    max-width: 75%;
+    padding: 8px 12px;
+    border-radius: 15px;
+    font-size: 0.9em;
+    word-wrap: break-word;
+    display: inline-block;
+    clear: both;
+    position: relative;
+}
+
+.mensaje-propio {
+    align-self: flex-end;
+    background-color: #dcf8c6;
+    border-bottom-right-radius: 0;
+    text-align: right;
+}
+
+.mensaje-otro {
+    align-self: flex-start;
+    background-color: #f1f0f0;
+    border-bottom-left-radius: 0;
+    text-align: left;
+}
+#resultados {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+    margin-top: 30px;
+}
+
+.equipo {
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 15px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    padding: 20px;
+    width: 250px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.3s ease;
+    color: #333;
+    font-weight: bold;
+    border: 2px solid #1d3557;
+}
+
+.equipo:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    background-color: #f0f8ff;
+}
+
+.boton-con-contador {
+    position: relative;
+}
+
+.boton-con-contador::after {
+    content: attr(data-count);
+    position: absolute;
+    top: -8px;
+    right: -8px;
+    background: red;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 2px 6px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+/* Efecto glow para botón y modal */
+.glow {
+  box-shadow: 0 0 15px 5px rgba(255, 230, 0, 0.8);
+  border-color: #ffe600;
+  background-color: #fff176 !important;
+  color: #1d3557 !important;
+  transition: box-shadow 0.5s ease, background-color 0.5s ease;
+}
+
+/* Reutilizamos la animación de sacudida */
+@keyframes shake {
+  0% { transform: rotate(0deg); }
+  20% { transform: rotate(-10deg); }
+  40% { transform: rotate(10deg); }
+  60% { transform: rotate(-6deg); }
+  80% { transform: rotate(6deg); }
+  100% { transform: rotate(0deg); }
+}
+
+.shake-notif {
+  animation: shake 0.6s ease-in-out;
+  animation-iteration-count: 2;
+}
+
+.boton-notificacion {
+    animation: brillar 1s infinite alternate;
+}
+
+@keyframes brillar {
+    from {
+        background-color: #1d3557;
+        box-shadow: 0 0 5px #ffce00, 0 0 10px #ffce00;
+    }
+    to {
+        background-color: #457b9d;
+        box-shadow: 0 0 15px #ffce00, 0 0 25px #ffce00;
+    }
+}
+
+
+    </style>
+</head>
+
+<body>
+    <section class="hero2">
+        <h1>BUSCA A TUS RIVALES</h1>
+        <h4>Elije a tus rivales, retalos y disfruta de la experiencia Winners League</h4>
+    </section>
+
+    <div class="botonera">
+        <button onclick="buscarEquipos()">Reta a otros equipos</button>
+    
+        <button id="btnNotificaciones" class="boton-con-contador" onclick="verNotificaciones()">
+            🔔 Ver Notificaciones
+            <span id="contador-notificaciones" class="contador"></span>
+
+        </button>
+    
+        <button id="btnChat" class="boton-con-contador" onclick="abrirChat()">
+            💬 Chat
+            <span id="contador-chat" class="contador"></span>
+        </button>
+    
+        <button onclick="volver()">VOLVER AL INICIO</button>
+       
+    </div>
+    <audio id="sonidoMensaje" src="../futbol_match/campana-40773.mp3" preload="auto"></audio>
+    
+<div id="resultados"></div>
+
+<div id="overlay"></div>
+
+<!-- Info equipo -->
+<div id="modal">
+    <h3>Información del Equipo</h3>
+    <div id="infoEquipo"></div>
+    <button onclick="enviarInvitacion()">Invitar</button>
+    <button onclick="cerrarModal()">Seguir Buscando</button>
+</div>
+
+<!-- Notificaciones -->
+<div id="modalNotif">
+    <h3>Invitaciones Recibidas</h3>
+    <div id="listaInvitaciones"></div>
+    <h3>Respuestas a Tus Invitaciones</h3>
+    <div id="respuestasInvitaciones"></div>
+    <button onclick="cerrarNotificaciones()">Cerrar</button>
+</div>
+
+<!-- Chat Modal -->
+<div id="panelChat" style="display:none; position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); width:320px; background:white; border:1px solid #ccc; border-radius:10px; padding:15px; z-index:10000;">
+    <h3>Retos Aceptados</h3>
+    <div id="listaMatches"></div>
+
+    <div id="zonaChat" style="display:none;">
+        <hr>
+        <strong id="nombreChat"></strong>
+        <div id="mensajes" style="height:200px; overflow-y:auto; border-top:1px solid #eee; margin-top:10px; padding-top:10px;"></div>
+        <input type="text" id="mensajeInput" placeholder="Escribe un mensaje..." style="width:80%; margin-top:10px;">
+        <button onclick="enviarMensaje()" id="btnEnviar" style="width:18%;">➤</button>
+    </div>
+    <button onclick="cerrarChat()" style="margin-top:10px;">Cerrar</button>
+</div>
+
+<script>
+const equipoLogeado = "<?php echo isset($_SESSION['equipo']) ? $_SESSION['equipo'] : 'Desconocido'; ?>";
+let equipoSeleccionado = '';
+let receptorChat = '';
+let matchesAceptados = [];
+let invitacionesPrevias = 0;
+
+function buscarEquipos() {
+    // Aquí ya no usamos filtros de distrito ni rango
+    fetch('buscar.php')  // Solo pedimos todos los equipos
+        .then(response => response.text())
+        .then(data => {
+            try {
+                const jsonData = JSON.parse(data);
+                mostrarEquipos(jsonData);
+            } catch (e) {
+                document.getElementById('resultados').innerHTML = '<p>Error inesperado al cargar equipos.</p>';
+            }
+        });
+}
+
+function mostrarEquipos(data) {
+    const resultados = document.getElementById('resultados');
+    resultados.innerHTML = '';
+    if (data.length === 0) {
+        resultados.innerHTML = '<p>No se encontraron equipos.</p>';
+        return;
+    }
+    data.forEach(eq => {
+        const div = document.createElement('div');
+        div.className = 'equipo';
+        div.textContent = eq.nombre;
+        div.onclick = () => mostrarModal(eq);
+        resultados.appendChild(div);
+    });
+}
+
+function mostrarModal(equipo) {
+    equipoSeleccionado = equipo.nombre;
+    document.getElementById('infoEquipo').innerHTML = `
+        <p><strong>Nombre:</strong> ${equipo.nombre}</p>
+        <p><strong>Edad:</strong> ${equipo.edad_min} - ${equipo.edad_max}</p>
+        <p><strong>Distrito:</strong> ${equipo.distrito}</p>
+
+        <p><strong>Jugadores:</strong> ${equipo.jugadores}</p>
+        <p><strong>Victorias:</strong> ${equipo.victorias}, <strong>Derrotas:</strong> ${equipo.derrotas}</p>
+    `;
+    document.getElementById('overlay').style.display = 'block';
+    document.getElementById('modal').style.display = 'block';
+}
+
+function cerrarModal() {
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('modal').style.display = 'none';
+    equipoSeleccionado = '';
+}
+
+function enviarInvitacion() {
+    fetch('enviar_invitacion.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `equipo_destino=${encodeURIComponent(equipoSeleccionado)}`
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert(msg);
+        cerrarModal();
+    });
+}
+
+let mensajesPrevios = 0;
+
+function revisarMensajesNuevos() {
+    fetch('ver_invitaciones.php')
+        .then(res => res.json())
+        .then(data => {
+            const btnNotif = document.getElementById("btnNotificaciones");
+            const audioNotif = document.getElementById("sonidoNotificacion");
+
+            if (data.length > 0) {
+                btnNotif.classList.add("boton-notificacion");
+                btnNotif.dataset.count = data.length;
+
+                if (data.length > invitacionesPrevias && audioNotif) {
+                    audioNotif.play().catch(e => console.log("Error al reproducir sonido:", e));
+                }
+            } else {
+                btnNotif.classList.remove("boton-notificacion");
+                btnNotif.dataset.count = '';
+            }
+
+            invitacionesPrevias = data.length;
+        })
+        .catch(err => console.error("Error revisando invitaciones:", err));
+}
+
+
+function verNotificaciones() {
+    fetch('ver_invitaciones.php')
+        .then(res => res.json())
+        .then(data => {
+            const lista = document.getElementById('listaInvitaciones');
+            const btnNotif = document.getElementById('btnNotificaciones');
+            const audioNotif = document.getElementById('sonidoMensaje');
+
+
+            lista.innerHTML = '';
+
+            if (data.length === 0) {
+                lista.innerHTML = '<p>No tienes invitaciones nuevas.</p>';
+                btnNotif.classList.remove('boton-notificacion');
+            } else {
+                btnNotif.classList.add('boton-notificacion');
+                
+                // Reproduce sonido solo si hay invitaciones nuevas
+                if (audioNotif) {
+                    audioNotif.play().catch(e => console.log("Audio no pudo reproducirse:", e));
+                }
+
+                data.forEach(inv => {
+                    const div = document.createElement('div');
+                    div.innerHTML = `
+                        <p><strong>${inv.equipo_envia}</strong> te ha invitado.</p>
+                        <button onclick="responderInvitacion('${inv.equipo_envia}', 'aceptar')">Aceptar</button>
+                        <button onclick="responderInvitacion('${inv.equipo_envia}', 'rechazar')">Rechazar</button>
+                        <hr>
+                    `;
+                    lista.appendChild(div);
+                });
+            }
+
+            // Continúa con las respuestas...
+            fetch('ver_respuestas.php')
+                .then(res => res.json())
+                .then(respuestas => {
+                    const respuestasDiv = document.getElementById('respuestasInvitaciones');
+                    respuestasDiv.innerHTML = '';
+                    if (respuestas.length === 0) {
+                        respuestasDiv.innerHTML = '<p>No hay respuestas nuevas.</p>';
+                    } else {
+                        respuestas.forEach(resp => {
+                            const div = document.createElement('div');
+                            div.innerHTML = `<p>${resp.mensaje}</p><hr>`;
+                            respuestasDiv.appendChild(div);
+                        });
+                    }
+
+                    document.getElementById('overlay').style.display = 'block';
+                    document.getElementById('modalNotif').style.display = 'block';
+                });
+        });
+}
+
+
+
+function cerrarNotificaciones() {
+    document.getElementById('overlay').style.display = 'none';
+    document.getElementById('modalNotif').style.display = 'none';
+    location.reload(); // 👈 Esto recarga la página
+}
+
+function responderInvitacion(equipo_envia, accion) {
+    fetch('responder_invitacion.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `equipo_envia=${encodeURIComponent(equipo_envia)}&accion=${encodeURIComponent(accion)}`
+    })
+    .then(res => res.text())
+    .then(msg => {
+        alert(msg);
+        verNotificaciones();
+    });
+}
+
+// Otras funciones relacionadas con el chat (sin cambios)
+function abrirChat() {
+    
+    const div = document.getElementById("listaMatches");
+    div.innerHTML = "";
+
+    if (matchesAceptados.length === 0) {
+        div.innerHTML = "<p>Aún no tienes a nadie, busca equipos a quienes enfrentar.</p>";
+        document.getElementById("zonaChat").style.display = "none";
+    } else {
+        matchesAceptados.forEach(nombre => {
+            const btn = document.createElement("button");
+            btn.textContent = nombre;
+            btn.style.margin = "3px";
+            btn.onclick = () => iniciarChatCon(nombre);
+            div.appendChild(btn);
+        });
+    }
+
+    document.getElementById("panelChat").style.display = "block";
+}
+
+function iniciarChatCon(nombre) {
+    receptorChat = nombre;
+    document.getElementById("nombreChat").textContent = "Chat con " + nombre;
+    document.getElementById("zonaChat").style.display = "block";
+    document.getElementById("mensajeInput").disabled = false;
+    document.getElementById("btnEnviar").disabled = false;
+    cargarMensajes(); // <- aquí sí está bien llamado
+}
+
+
+
+function cerrarChat() {
+    document.getElementById("panelChat").style.display = "none";
+    document.getElementById("zonaChat").style.display = "none";
+    document.getElementById("mensajes").innerHTML = "";
+    document.getElementById("mensajeInput").value = "";
+}
+
+function enviarMensaje() {
+    const mensaje = document.getElementById("mensajeInput").value;
+    if (!mensaje) return;
+
+    fetch('guardar_mensaje.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+        body: `receptor=${encodeURIComponent(receptorChat)}&mensaje=${encodeURIComponent(mensaje)}`
+    })
+    .then(res => res.text())
+    .then(() => {
+        document.getElementById("mensajeInput").value = ''; // Limpiar el campo de entrada
+        cargarMensajes(); // Cargar los nuevos mensajes
+    });
+}
+
+// Función para cargar mensajes
+function cargarMensajes() {
+    const mensajesDiv = document.getElementById("mensajes");
+    mensajesDiv.innerHTML = ''; // Limpiar los mensajes antes de cargar los nuevos
+
+    if (matchesAceptados.length === 0) {
+        console.log("No tienes equipos con los que puedas chatear.");
+        return;
+    }
+
+    fetch(`obtener_Mensaje.php?receptor=${encodeURIComponent(receptorChat)}`)
+        .then(res => res.json())
+        .then(data => {
+            if (!Array.isArray(data)) {
+                mensajesDiv.innerHTML = `<p style="color: gray;">${data.error || 'No se pudo cargar el chat.'}</p>`;
+                return;
+            }
+
+            // Mostrar los nuevos mensajes
+            data.forEach(m => {
+                const msg = document.createElement('div');
+                msg.className = 'chat-burbuja ' + (m.emisor === equipoLogeado ? 'mensaje-propio' : 'mensaje-otro');
+                msg.textContent = m.mensaje;
+                mensajesDiv.appendChild(msg);
+            });
+
+            mensajesDiv.scrollTop = mensajesDiv.scrollHeight; // Desplazar al final del chat
+        });
+}
+
+function cargarMatches() {
+    fetch('matches.php')
+        .then(res => res.json())
+        .then(data => {
+            if (Array.isArray(data)) {
+                matchesAceptados = data.map(eq => eq.nombre_equipo);
+               
+            } else {
+                matchesAceptados = [];
+                console.warn("No se pudo cargar matches:", data);
+            }
+        });
+}
+
+
+let ultimaCantidadNotificaciones = 0;
+
+function revisarNotificacionesAuto() {
+    fetch('ver_invitaciones.php')
+        .then(res => res.json())
+        .then(data => {
+            const btnNotif = document.getElementById('btnNotificaciones');
+            const audio = document.getElementById('sonidoNotificacion');
+            const cantidadActual = data.length;
+
+            // Si la cantidad actual es mayor que la última conocida, hay nuevas
+            if (cantidadActual > ultimaCantidadNotificaciones) {
+                btnNotif.classList.add('boton-notificacion');
+                if (audio) {
+                    audio.play().catch(e => console.warn("No se pudo reproducir el audio:", e));
+                }
+            } else if (cantidadActual === 0) {
+                btnNotif.classList.remove('boton-notificacion');
+            }
+
+            // Guardamos la última cantidad para comparar en la siguiente vuelta
+            ultimaCantidadNotificaciones = cantidadActual;
+        })
+        .catch(error => console.error("Error revisando notificaciones automáticamente:", error));
+}
+let notificacionesPrevias = 0;
+
+function revisarInvitacionesNuevas() {
+    fetch('ver_invitaciones.php')
+        .then(res => res.json())
+        .then(data => {
+            const btnNotif = document.getElementById('btnNotificaciones');
+            const audioNotif = document.getElementById('sonidoNotificacion'); // 👈 correcto aquí
+            const cantidad = data.length;
+
+            if (cantidad > 0) {
+                btnNotif.classList.add('boton-notificacion');
+                btnNotif.dataset.count = cantidad;
+
+                if (cantidad > notificacionesPrevias && audioNotif) {
+                    audioNotif.play().catch(() => {});
+                }
+            } else {
+                btnNotif.classList.remove('boton-notificacion');
+                btnNotif.dataset.count = '';
+            }
+
+            notificacionesPrevias = cantidad;
+        })
+        .catch(err => console.error("Error al revisar invitaciones:", err));
+}
+
+
+ 
+function volver() {
+    window.location.href = 'index.php';
+}
+
+
+document.getElementById("mensajeInput").addEventListener("keypress", function(event) {
+    if (event.key === "Enter") { // Si se presiona la tecla "Enter"
+        event.preventDefault(); // Prevenir el comportamiento por defecto de la tecla "Enter"
+        enviarMensaje(); // Llamar a la función para enviar el mensaje
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    cargarMatches(); // ✅ Solo esto
+});
+document.addEventListener('click', () => {
+    const audio = document.getElementById("sonidoNotificacion");
+    if (audio && audio.paused) {
+        // Reproducir y pausar inmediatamente para "autorizar"
+        audio.play().then(() => {
+            audio.pause();
+            audio.currentTime = 0;
+            console.log("⚠️ Audio autorizado por interacción del usuario");
+        }).catch(err => {
+            console.warn("⚠️ No se pudo autorizar audio:", err);
+        });
+    }
+}, { once: true }); // Solo una vez
+
+
+setInterval(() => {
+    if (document.getElementById("panelChat").style.display === "block") {
+        cargarMensajes();
+    }
+
+    revisarMensajesNuevos();       // Para mensajes
+    revisarInvitacionesNuevas();   // Para invitaciones
+
+}, 5000);
+
+
+</script>
+</body>
+</html>

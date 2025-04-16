@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Ranking & Historial de Partidos</title>
+    <link rel="stylesheet" href="estilos.css">
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(145deg, #1d3557, #457b9d);
+            color: #f1f1f1;
+        }
+
+        header {
+            background-color: #0b3d91;
+            padding: 20px;
+            text-align: center;
+            font-size: 2rem;
+            font-weight: bold;
+            color: #fff;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        main {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 20px;
+            background: #2b2d42;
+            border-radius: 15px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #fca311;
+        }
+
+        .partido {
+            background: #1d3557;
+            margin-bottom: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid #fca311;
+            transition: transform 0.2s;
+        }
+
+        .partido:hover {
+            transform: scale(1.02);
+            background-color: #284b63;
+        }
+
+        .partido button {
+            background-color: #fca311;
+            color: #000;
+            border: none;
+            padding: 8px 15px;
+            margin-top: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .partido textarea,
+        .partido input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border-radius: 5px;
+            border: none;
+            resize: none;
+        }
+
+        .partido textarea {
+            height: 60px;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <header>⚽ Ranking & Historial de Partidos</header>
+
+    <main>
+        <h2>📋 Partidos Jugados</h2>
+        <div id="historialPartidos">
+            <p>Cargando historial...</p>
+        </div>
+    </main>
+
+    <footer>
+        &copy; 2025 Futbol Match — Todos los derechos reservados
+    </footer>
+
+    <script>
+        function cargarHistorial() {
+            fetch('historial_partidos.php')
+                .then(res => res.json())
+                .then(partidos => {
+                    let div = document.getElementById('historialPartidos');
+                    div.innerHTML = '';
+                    if (partidos.length === 0) {
+                        div.innerHTML = '<p>No hay partidos jugados aún.</p>';
+                        return;
+                    }
+
+                    partidos.forEach(p => {
+                        let partidoDiv = document.createElement('div');
+                        partidoDiv.className = 'partido';
+                        partidoDiv.innerHTML = `
+                            <strong>📅 ${p.fecha}</strong> a las <strong>${p.hora}</strong><br>
+                            🆚 Rival: <strong>${p.rival}</strong><br>
+                            🎮 Tipo: ${p.tipo}<br>
+                            <button onclick="mostrarCalificar(${p.partido_id})">Calificar</button>
+                            <div id="calificar_${p.partido_id}" style="display:none;">
+                                <label>✍ Comentario:</label>
+                                <textarea id="comentario_${p.partido_id}" placeholder="¿Qué te pareció el partido?"></textarea>
+                                <label>⭐ Calificación (1-5):</label>
+                                <input type="number" id="calificacion_${p.partido_id}" min="1" max="5">
+                                <button onclick="enviarCalificacion(${p.partido_id})">Enviar</button>
+                            </div>
+                        `;
+                        div.appendChild(partidoDiv);
+                    });
+                });
+        }
+
+        function mostrarCalificar(id) {
+            document.getElementById('calificar_' + id).style.display = 'block';
+        }
+
+        function enviarCalificacion(id) {
+            const comentario = document.getElementById('comentario_' + id).value;
+            const calificacion = document.getElementById('calificacion_' + id).value;
+            fetch('calificar_partido.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `partido_id=${id}&comentario=${encodeURIComponent(comentario)}&calificacion=${calificacion}`
+            }).then(res => res.json())
+              .then(data => {
+                if (data.success) {
+                    alert('✅ Calificación enviada');
+                    document.getElementById('calificar_' + id).style.display = 'none';
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', cargarHistorial);
+    </script>
+</body>
+</html>
