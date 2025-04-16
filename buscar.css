@@ -1,0 +1,90 @@
+/* buscar.css */
+body {
+    font-family: 'Arial', sans-serif;
+    background:  #fd5454;
+    margin: 0;
+    padding: 0;
+    color: #333;
+   
+}
+
+h1 {
+    text-align: center;
+    color: #1d3557;
+    margin: 30px 0;
+}
+
+button {
+    background-color: #1d3557;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 10px 5px;
+    cursor: pointer;
+    border-radius: 5px;
+    
+}
+
+button:hover {
+    background-color: #457b9d;
+}
+
+#resultados {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.equipo {
+    background-color: #f8f9fa;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    padding: 10px;
+    margin: 10px 0;
+    color: #0077b6;
+    text-decoration: underline;
+    cursor: pointer;
+    
+}
+
+.equipo:hover {
+    background-color: #e3f2fd;
+}
+
+#modal, #modalNotif, #panelChat {
+    font-size: 14px;
+}
+
+input[type="text"] {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    width: 90%;
+    margin-top: 10px;
+}
+
+#panelChat {
+    font-family: 'Arial', sans-serif;
+}
+
+.chat-burbuja {
+    border-radius: 20px;
+    padding: 8px 15px;
+    margin: 6px 0;
+    display: inline-block;
+    max-width: 70%;
+    word-wrap: break-word;
+}
+
+.mensaje-propio {
+    background-color: #a8dadc;
+    float: right;
+    clear: both;
+    border-bottom-right-radius: 0;
+}
+
+.mensaje-otro {
+    background-color: #f1f1f1;
+    float: left;
+    clear: both;
+    border-bottom-left-radius: 0;
+}
